@@ -57,7 +57,9 @@ public class RecyclerViewSuspendView extends FrameLayout {
                 if(firstCount==0){
                     suspendView.setY(0);
                     showCount=0;
-                    mSuspendViewAdapter.onSuspendViewHolder(suspendView,showCount);
+                    if(mSuspendViewAdapter!=null){
+                        mSuspendViewAdapter.onSuspendViewHolder(suspendView,showCount);
+                    }
                 }else{
                     for(int i=0;i<lastCount;i++){
                         View itemView=linearLayoutManager.getChildAt(i);
@@ -69,13 +71,17 @@ public class RecyclerViewSuspendView extends FrameLayout {
                                     suspendView.setY(0);
                                     if(firsrPosition!=showCount){
                                         showCount=firsrPosition;
-                                        mSuspendViewAdapter.onSuspendViewHolder(suspendView,showCount);
+                                        if(mSuspendViewAdapter!=null){
+                                            mSuspendViewAdapter.onSuspendViewHolder(suspendView,showCount);
+                                        }
                                     }
                                 }else if(top<suspendView.getHeight()){
                                     suspendView.setY(top-suspendView.getHeight());
                                     if(firsrPosition!=showCount){
                                         showCount=firsrPosition;
-                                        mSuspendViewAdapter.onSuspendViewHolder(suspendView,showCount);
+                                        if(mSuspendViewAdapter!=null){
+                                            mSuspendViewAdapter.onSuspendViewHolder(suspendView,showCount);
+                                        }
                                     }
                                     return;
                                 }else{
@@ -175,21 +181,63 @@ public class RecyclerViewSuspendView extends FrameLayout {
         }
     };
 
+    public RecyclerView getRecyclerView() {
+        return mRecyclerView;
+    }
+
+    public View getSuspendView() {
+        return suspendView;
+    }
 
     public  interface SuspendViewAdapter {
 
+        /**
+         * 获取item数量
+         * @return
+         */
         int getItemCount();
 
+        /**
+         * 实现item显示
+         * @param holder
+         * @param position
+         * @return
+         */
         RecyclerView.ViewHolder onBindViewHolder(RecyclerView.ViewHolder holder, int position);
 
+        /**
+         * 实现标签显示
+         * @param suspendView
+         * @param position
+         */
         void onSuspendViewHolder(View suspendView, int position);
 
+        /**
+         * 获取创建的item
+         * @param parent
+         * @param viewType
+         * @return
+         */
         RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType);
 
+        /**
+         * 获取标签VIEW
+         * @return
+         */
         View getSuspendView();
 
+        /**
+         * 获取item类型
+         * @param position
+         * @return
+         */
         int getItemViewType(int position);
 
+        /**
+         * 判断标签是否显示
+         * @param position
+         * @return
+         */
         int itemSuspendViewVisible(int position);
 
     }
